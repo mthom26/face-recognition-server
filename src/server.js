@@ -1,14 +1,11 @@
 const express = require('express');
 
-const PORT = process.env.PORT || 8000;
+const authRoutes = require('./routes/auth');
 
+const PORT = process.env.PORT || 8000;
 const app = express();
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Hello'
-  });
-});
+app.use(authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on PORT: ${PORT}`);
