@@ -1,5 +1,7 @@
 const express = require('express');
 
+const { postSignUp } = require('../controllers/auth');
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -13,5 +15,7 @@ router.get('/about', (req, res) => {
     message: 'About'
   });
 });
+
+router.post('/signup', postSignUp);
 
 module.exports = router;
