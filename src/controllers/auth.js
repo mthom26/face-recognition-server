@@ -6,7 +6,7 @@ const postSignUp = async (req, res) => {
     const user = await db.User.findOne({ email: email });
 
     if (user) {
-      return res.json({ message: 'That user already exists!' });
+      return res.status(400).json({ message: 'That user already exists!' });
     }
 
     const newUser = new db.User({
@@ -16,8 +16,9 @@ const postSignUp = async (req, res) => {
     });
     await newUser.save();
 
-    res.json({ message: 'Signed Up!' });
+    res.status(201).json({ message: 'Signed Up!' });
   } catch (err) {
+    res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
   }
 };
