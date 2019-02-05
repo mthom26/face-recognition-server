@@ -8,9 +8,11 @@ describe('Create New User', () => {
     };
 
     const result = await createUser('Jimbo', 'jimbo@testmail.com', 'jimbopw');
-    expect.assertions(2);
+    expect.assertions(4);
     expect(result.status).toEqual(expectedResult.status);
     expect(result.data.message).toEqual(expectedResult.message);
+    expect(result.data.token).not.toBeNull();
+    expect(result.data.token).not.toBeUndefined();
   });
 
   it('returns error when trying to create existing user', async () => {

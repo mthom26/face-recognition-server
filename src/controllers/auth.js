@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const db = require('../models');
 
@@ -19,7 +20,17 @@ const postSignUp = async (req, res) => {
     });
     await newUser.save();
 
-    res.status(201).json({ message: 'Signed Up!' });
+    const token = await jwt.sign(
+      {
+        id: newUser._id.toString(),
+        name: newUser.name,
+        email: newUser.email
+      },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    );
+
+    res.status(201).json({ message: 'Signed Up!', token });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
@@ -44,7 +55,17 @@ const postLogin = async (req, res) => {
         .json({ message: 'That email/password is incorrect.' });
     }
 
-    res.status(200).json({ message: 'Logged In!' });
+    const token = await jwt.sign(
+      {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email
+      },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    );
+
+    res.status(200).json({ message: 'Logged In!', token });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
