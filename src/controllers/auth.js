@@ -20,6 +20,7 @@ const postSignUp = async (req, res) => {
     });
     await newUser.save();
 
+    const id = newUser._id.toString();
     const token = await jwt.sign(
       {
         id: newUser._id.toString(),
@@ -30,7 +31,7 @@ const postSignUp = async (req, res) => {
       { expiresIn: 60 * 60 * 24 }
     );
 
-    res.status(201).json({ message: 'Signed Up!', token });
+    res.status(201).json({ message: 'Signed Up!', token, name, email, id });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
@@ -55,6 +56,8 @@ const postLogin = async (req, res) => {
         .json({ message: 'That email/password is incorrect.' });
     }
 
+    const id = user._id.toString();
+    const name = user.name;
     const token = await jwt.sign(
       {
         id: user._id.toString(),
@@ -65,7 +68,7 @@ const postLogin = async (req, res) => {
       { expiresIn: 60 * 60 * 24 }
     );
 
-    res.status(200).json({ message: 'Logged In!', token });
+    res.status(200).json({ message: 'Logged In!', token, email, name, id });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
