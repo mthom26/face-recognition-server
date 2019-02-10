@@ -30,4 +30,16 @@ const getBoundingBoxes = result => {
   return boundingBoxes;
 };
 
-module.exports = { detectFaces };
+const uploadTest = async (req, res) => {
+  console.log('uploadTest hit');
+  try {
+    const image = req.file;
+    console.log(image.path);
+    res.status(200).json({ message: 'Upload success!' });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: 'Upload fail!' });
+  }
+};
+
+module.exports = { detectFaces, uploadTest };

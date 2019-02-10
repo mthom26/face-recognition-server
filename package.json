@@ -31,7 +31,8 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.4.9"
+    "mongoose": "^5.4.9",
+    "multer": "^1.4.1"
   },
   "jest": {
     "testMatch": [
