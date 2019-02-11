@@ -47,6 +47,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
+app.use('/images', express.static('images'));
 app.use(
   '/images',
   express.static(path.join(path.dirname(process.mainModule.filename), 'images'))
