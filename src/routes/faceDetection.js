@@ -1,11 +1,14 @@
 const express = require('express');
 
-const { detectFaces, uploadTest } = require('../controllers/faceDetection');
+const {
+  detectFacesWithUrl,
+  detectFacesWithBase64
+} = require('../controllers/faceDetection');
 
 const router = express.Router();
 
-router.get('/test', detectFaces);
-router.post('/detect-faces', detectFaces);
-router.post('/upload-test', uploadTest);
+router.get('/test', detectFacesWithUrl);
+router.post('/detect-faces', detectFacesWithUrl);
+router.post('/upload-test', detectFacesWithBase64);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Clarifai = require('clarifai');
+const fs = require('fs');
 
 const clarifaiApp = new Clarifai.App({
   apiKey: process.env.CLARIFAI_API_KEY
@@ -7,7 +8,7 @@ const clarifaiApp = new Clarifai.App({
 const testUrl =
   'https://www.encyclopedia.com/sites/default/files/4/2793330.jpg';
 
-const detectFaces = async (req, res) => {
+const detectFacesWithUrl = async (req, res) => {
   const { input } = req.body;
   try {
     const result = await clarifaiApp.models.predict(
@@ -30,16 +31,24 @@ const getBoundingBoxes = result => {
   return boundingBoxes;
 };
 
-const uploadTest = async (req, res) => {
-  console.log('uploadTest hit');
+const detectFacesWithBase64 = async (req, res) => {
   try {
     const image = req.file;
-    console.log(image.path);
-    res.status(200).json({ message: 'Upload success!' });
+    const imageToBase64 = fs.readFileSync(image.path).toString('base64');
+    // console.log(imageToBase64);
+
+    const result = await clarifaiApp.models.predict(
+      Clarifai.FACE_DETECT_MODEL,
+      { base64: imageToBase64 }
+    );
+    const data = getBoundingBoxes(result);
+    res
+      .status(200)
+      .json({ message: 'Face Detect success!', imageUrl: image.path, data });
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: 'Upload fail!' });
   }
 };
 
-module.exports = { detectFaces, uploadTest };
+module.exports = { detectFacesWithUrl, detectFacesWithBase64 };
