@@ -9,6 +9,7 @@ const db = require('./models');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 const faceRoutes = require('./routes/faceDetection');
+const imageRoutes = require('./routes/image');
 const { seedDb } = require('./utils/seedDb');
 // const { detectFaces } = require('./controllers/faceDetection');
 
@@ -47,7 +48,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
-app.use('/images', express.static('images'));
 app.use(
   '/images',
   express.static(path.join(path.dirname(process.mainModule.filename), 'images'))
@@ -56,6 +56,7 @@ app.use(
 app.use(authRoutes);
 app.use(profileRoutes);
 app.use(faceRoutes);
+app.use(imageRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on PORT: ${PORT}`);
