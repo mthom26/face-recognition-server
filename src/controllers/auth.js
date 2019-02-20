@@ -31,7 +31,18 @@ const postSignUp = async (req, res) => {
       { expiresIn: 60 * 60 * 24 }
     );
 
-    res.status(201).json({ message: 'Signed Up!', token, name, email, id });
+    res.status(201).json({
+      message: 'Signed Up!',
+      token,
+      user: {
+        name,
+        email,
+        id,
+        dateJoined: newUser.dateJoined,
+        dateLastLogin: newUser.dateLastLogin,
+        imageSubmissions: newUser.imageSubmissions
+      }
+    });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);
@@ -68,7 +79,18 @@ const postLogin = async (req, res) => {
       { expiresIn: 60 * 60 * 24 }
     );
 
-    res.status(200).json({ message: 'Logged In!', token, email, name, id });
+    res.status(200).json({
+      message: 'Logged In!',
+      token,
+      user: {
+        name,
+        email,
+        id,
+        dateJoined: user.dateJoined,
+        dateLastLogin: user.dateLastLogin,
+        imageSubmissions: user.imageSubmissions
+      }
+    });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
     console.log(err);

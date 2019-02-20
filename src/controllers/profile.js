@@ -13,7 +13,10 @@ const getProfile = async (req, res) => {
       user: {
         id: user._id.toString(),
         name: user.name,
-        email: user.email
+        email: user.email,
+        dateJoined: user.dateJoined,
+        dateLastLogin: user.dateLastLogin,
+        imageSubmissions: user.imageSubmissions
       }
     });
   } catch (err) {
