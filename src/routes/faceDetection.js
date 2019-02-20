@@ -1,5 +1,7 @@
 const express = require('express');
 
+const { isAuthenticated } = require('../middleware/isAuthenticated');
+
 const {
   detectFacesWithUrl,
   detectFacesWithBase64
@@ -7,8 +9,8 @@ const {
 
 const router = express.Router();
 
-router.get('/test', detectFacesWithUrl);
-router.post('/detect-faces', detectFacesWithUrl);
-router.post('/upload-test', detectFacesWithBase64);
+// router.get('/test', detectFacesWithUrl);
+router.post('/detect-faces', isAuthenticated, detectFacesWithUrl);
+router.post('/upload-test', isAuthenticated, detectFacesWithBase64);
 
 module.exports = router;

@@ -16,7 +16,12 @@ const detectFacesWithUrl = async (req, res) => {
       input || testUrl
     );
     const data = getBoundingBoxes(result);
-    console.log(data);
+
+    // Update imageSubmissions count
+    // TODO update state on client side (refetch user or just do it manually?)
+    res.locals.user.imageSubmissions++;
+    await res.locals.user.save();
+
     res.status(200).json({ message: 'Face Detect success!', data });
   } catch (err) {
     console.log(err);
@@ -42,6 +47,12 @@ const detectFacesWithBase64 = async (req, res) => {
       { base64: imageToBase64 }
     );
     const data = getBoundingBoxes(result);
+
+    // Update imageSubmissions count
+    // TODO update state on client side (refetch user or just do it manually?)
+    res.locals.user.imageSubmissions++;
+    await res.locals.user.save();
+
     res
       .status(200)
       .json({ message: 'Face Detect success!', imageUrl: image.path, data });
