@@ -7,11 +7,27 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
     required: true
+  },
+  dateJoined: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
+  dateLastLogin: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
+  imageSubmissions: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 
