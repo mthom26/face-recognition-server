@@ -1,8 +1,6 @@
-const db = require('../models');
-
 const getProfile = async (req, res) => {
   try {
-    const user = await db.User.findOne({ email: req.body.email });
+    const { user } = res.locals;
 
     if (!user) {
       return res.status(500).json({ error: 'Sorry something went wrong.' });
