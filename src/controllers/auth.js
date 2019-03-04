@@ -1,7 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const sendGridTransport = require('nodemailer-sendgrid-transport');
 
 const db = require('../models');
+
+const transporter = nodemailer.createTransport(
+  sendGridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY
+    }
+  })
+);
 
 const postSignUp = async (req, res) => {
   try {
@@ -42,6 +52,13 @@ const postSignUp = async (req, res) => {
         dateLastLogin: newUser.dateLastLogin,
         imageSubmissions: newUser.imageSubmissions
       }
+    });
+
+    transporter.sendMail({
+      to: email,
+      from: 'info@facefinder.com',
+      subject: 'Welcome to FaceFinder App!',
+      html: `<h1>Hello ${name}, you have successfully signed up for this app. Have fun!</h1>`
     });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
