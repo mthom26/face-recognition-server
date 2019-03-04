@@ -8,7 +8,7 @@ const isAuthenticated = async (req, res, next) => {
 
     jwt.verify(token, process.env.SECRET, async (err, decoded) => {
       if (err) {
-        res.status(403).json({ message: 'You must be logged in to do that' });
+        res.status(403).json({ error: 'Token not verified' });
       } else {
         // Get user and add it to locals so no more database requests need to
         // be made
@@ -22,7 +22,7 @@ const isAuthenticated = async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(403).json({ message: 'You must be logged in to do that' });
+    res.status(403).json({ error: 'You must be logged in to do that' });
   }
 };
 
