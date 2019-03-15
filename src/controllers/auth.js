@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const sendGridTransport = require('nodemailer-sendgrid-transport');
+const crypto = require('crypto');
 
 const db = require('../models');
 
@@ -114,4 +115,60 @@ const postLogin = async (req, res) => {
   }
 };
 
-module.exports = { postSignUp, postLogin };
+const postPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await db.User.findOne({ email });
+    if (!user) {
+      return res.status(500).json({ error: 'Sorry something went wrong.' });
+    }
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    res.status(200).json({ message: `Reset email sent to ${email}` });
+
+    transporter.sendMail({
+      to: email,
+      from: 'info@facefinder.com',
+      subject: 'Password Reset',
+      html: `
+        <p>A password reset has been requested for this email.</p>
+        <p>Click <a href="http://localhost:3000/password-reset/${token}">this link</a> to reset your password.</p>
+      `
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Sorry something went wrong.' });
+  }
+};
+
+const postNewPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await db.User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(500).json({ error: 'Password reset token timed out.' });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+    user.password = hashed;
+    await user.save();
+
+    res.status(200).json({
+      message: 'Password reset successfully.',
+      email: user.email
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Sorry something went wrong.' });
+  }
+};
+
+module.exports = { postSignUp, postLogin, postPasswordReset, postNewPassword };

@@ -28,6 +28,12 @@ const userSchema = mongoose.Schema({
     type: Number,
     required: true,
     default: 0
+  },
+  resetToken: {
+    type: String
+  },
+  resetTokenExpiration: {
+    type: Date
   }
 });
 
