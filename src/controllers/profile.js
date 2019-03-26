@@ -25,19 +25,20 @@ const getProfile = async (req, res) => {
   }
 };
 
-const updateName = async (req, res) => {
+const updateDetails = async (req, res) => {
   try {
-    const { newName } = req.body;
+    const { newName, newEmail } = req.body;
     const { user } = res.locals;
     if (!user) {
       return res.status(500).json({ error: 'Sorry something went wrong.' });
     }
     user.name = newName;
+    user.email = newEmail;
     await user.save();
 
     res.status(200).json({
-      message: 'Updated Name',
-      data: user.name
+      message: 'Updated Details',
+      data: { name: user.name, email: user.email }
     });
   } catch (err) {
     res.status(500).json({ error: 'Sorry something went wrong.' });
@@ -69,4 +70,4 @@ const updatePassword = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, updateName, updatePassword };
+module.exports = { getProfile, updateDetails, updatePassword };
