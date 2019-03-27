@@ -20,6 +20,7 @@ const detectFacesWithUrl = async (req, res) => {
     // Update imageSubmissions count
     // TODO update state on client side (refetch user or just do it manually?)
     res.locals.user.imageSubmissions++;
+    res.locals.user.dateLastLogin = Date.now();
     await res.locals.user.save();
 
     res.status(200).json({ message: 'Face Detect success!', data });
@@ -51,6 +52,7 @@ const detectFacesWithBase64 = async (req, res) => {
     // Update imageSubmissions count
     // TODO update state on client side (refetch user or just do it manually?)
     res.locals.user.imageSubmissions++;
+    res.locals.user.dateLastLogin = Date.now();
     await res.locals.user.save();
 
     res

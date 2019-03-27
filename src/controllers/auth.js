@@ -126,6 +126,7 @@ const postPasswordReset = async (req, res) => {
     const token = crypto.randomBytes(32).toString('hex');
     user.resetToken = token;
     user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+    user.dateLastLogin = Date.now();
     await user.save();
 
     res.status(200).json({ message: `Reset email sent to ${email}` });
@@ -160,6 +161,7 @@ const postNewPassword = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
     user.password = hashed;
+    user.dateLastLogin = Date.now();
     await user.save();
 
     res.status(200).json({

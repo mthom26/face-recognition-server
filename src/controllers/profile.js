@@ -34,6 +34,7 @@ const updateDetails = async (req, res) => {
     }
     user.name = newName;
     user.email = newEmail;
+    user.dateLastLogin = Date.now();
     await user.save();
 
     res.status(200).json({
@@ -61,6 +62,7 @@ const updatePassword = async (req, res) => {
 
     const hashed = await bcrypt.hash(newPassword, 10);
     user.password = hashed;
+    user.dateLastLogin = Date.now();
     await user.save();
 
     res.status(200).json({ message: 'Updated Password' });
